@@ -39,7 +39,7 @@ Visual Studio Code内の拡張機能から，`Tinymist Typst` を選択し，イ
 | 英字 | [CMU Serif](https://fontlibrary.org/en/font/cmu-serif#google_vignette) |
 | 数式 | [Latin Modern Math](https://ctan.org/tex-archive/fonts/lm-math) |
 
-これ以外のフォントを使用したい場合，`jsme_style.typ`ファイル内の`setting font`のフォント名を変更することで使用できます．
+これ以外のフォントを使用したい場合，`jcls.typ`ファイル内の`setting font`のフォント名を変更することで使用できます．
 
 ### 3. 本テンプレートをコピー
 

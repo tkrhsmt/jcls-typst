@@ -86,6 +86,7 @@ $
   &= sum_(x in X, y in Y) p(x,y) log (p(x, y))/(p(x) p(y))
 $
 と表示されます．
+
 数式番号はequateパッケージを利用しており，改行ごとに番号が割り振られます．
 しかし，長い数式などの関係で番号付けを一時的に避けたい場合があります．
 この場合，次の`#nonumber`関数を利用できます．
@@ -131,7 +132,7 @@ $<eq:laglange>
     [Drizzle], [Vanilla extract],
   ),
   caption: "TypstのTable guideで紹介されているクッキーのレシピ．",
-  placement: bottom
+  placement: auto
 )<cokkie-recipie>
 ```
 のように書けば，以下のように表示されます．
@@ -150,10 +151,8 @@ $<eq:laglange>
     [Drizzle], [Vanilla extract],
   ),
   caption: "TypstのTable guideで紹介されているクッキーのレシピ．",
-  placement: bottom
+  placement: auto
 )<cokkie-recipie>
-
-#pagebreak()
 
 引用するには，`@cokkie-recipie`のように記述すれば，@cokkie-recipie のように表示されます．
 
@@ -162,13 +161,13 @@ $<eq:laglange>
 #figure(
   image("figure/640x480.png", width: 50%),
   caption: "イメージの例．",
-  placement: top
+  placement: auto
 )<sample-image>
 ```
 #figure(
   image("figure/640x480.png", width: 50%),
   caption: "イメージの例．",
-  placement: top
+  placement: auto
 )<sample-image>
 のように記述すれば，上記のような表示が可能です．
 
@@ -211,5 +210,9 @@ Typstでは，`bibliography`関数を使うのが一般的ですが，日本語�
 ```
 
 文献の引用は簡単です．`@tsukahara2023`のように記述すれば，@tsukahara2023 のように文献を引用することができます．
+
+これは文章で，このような長い文章の後の数式は，次のように表示されます．
+$  sin x d x = cos x + C $
+これは狭いでしょうか？それともちょうどいいですか？
 
 #include "refs.typ"

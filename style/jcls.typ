@@ -56,7 +56,7 @@
   // setting paragraph indent
   set par(first-line-indent: 1em)
   // setting equation numbering
-  show math.equation: set block(spacing: 1em)
+  show math.equation: set block(spacing: 2em)
   set math.equation(numbering: "(1)")
   show heading.where(level: 1): it => {
     counter(math.equation).update(0)

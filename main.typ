@@ -1,6 +1,6 @@
 
 #import "style/jcls.typ": *
-#import "style/bib_style.typ": *
+#import "bib_style/bib_style.typ": *
 #show: bib_init
 #show: jcls_init
 #show: equate.with(breakable: true, number-mode: "line")

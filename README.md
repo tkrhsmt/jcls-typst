@@ -38,6 +38,7 @@ Visual Studio Code内の拡張機能から，`Tinymist Typst` を選択し，イ
 | 明朝体 | [Harano Aji Mincho](https://github.com/trueroad/HaranoAjiFonts) |
 | 英字 | [CMU Serif](https://fontlibrary.org/en/font/cmu-serif#google_vignette) |
 | 数式 | [Latin Modern Math](https://ctan.org/tex-archive/fonts/lm-math) |
+| 日本語書式設定 | [Adobe Blank](https://github.com/adobe-fonts/adobe-blank) |
 
 これ以外のフォントを使用したい場合，`jcls.typ`ファイル内の`setting font`のフォント名を変更することで使用できます．
 

@@ -21,6 +21,9 @@
   [#datetime.today().year()年#datetime.today().month()月#datetime.today().day()日]
 }
 
+// japanese code setting
+#let cjkre = regex("[ ]*([\p{Han}\p{Hiragana}\p{Katakana}]+(?:[,\(\)][ ]*[\p{Han}\p{Hiragana}\p{Katakana}]+)*)[ ]*")
+
 // ================================================== //
 //          Japanese class initial setting            //
 // ================================================== //
@@ -47,7 +50,7 @@
     #v(10pt)
     #set text(font: gothic, weight: "regular")
     #if counter(heading).display() != "0" and it.numbering != none {
-      counter(heading).display(it.numbering)
+      context counter(heading).display(it.numbering)
     }
     #h(10pt)
     #it.body
@@ -55,6 +58,12 @@
   ]
   // setting paragraph indent
   set par(first-line-indent: 1em)
+  // setting equation
+  show: equate.with(breakable: true, number-mode: "line")
+  show math.equation.where(block: false): it => {
+    let ghost = hide(text(font: "Adobe Blank", "\u{375}")) // 欧文ゴースト
+    ghost; it; ghost
+  }
   // setting equation numbering
   show math.equation: set block(spacing: 2em)
   set math.equation(numbering: "(1)")
@@ -84,7 +93,7 @@
       //#counter(heading).update(0)
       第
       #if it.numbering != none {
-        it.counter.display(it.numbering)
+        context it.counter.display(it.numbering)
       }
       部
       #v(0.25em)
@@ -154,10 +163,12 @@
     v(0.5em)
     grid(
       columns: 2,
-      align(top)[#it.supplement #it.counter.display() #h(1em)],
+      align(top)[#it.supplement #context it.counter.display() #h(1em)],
       align(left)[#it.body]
     )
   }
+  // Disable code breaks between Japanese characters
+  show cjkre: it => it.text.match(cjkre).captures.at(0)
 
 
   body

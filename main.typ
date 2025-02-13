@@ -1,9 +1,8 @@
 
 #import "style/jcls.typ": *
-#import "style/bib_style.typ": *
+#import "bib_style/bib_style.typ": *
 #show: bib_init
 #show: jcls_init
-#show: equate.with(breakable: true, number-mode: "line")
 
 #show: maketitle.with(
   title: [jclsテンプレート],
@@ -184,8 +183,8 @@ Typstでは，`bibliography`関数を使うのが一般的ですが，日本語�
 文献の書き方は，例えば以下のようになります．
 
 ```typst
-#bibliography-list(lang: "jp")[
-    #bib-tex()[
+#bibliography-list(lang: "ja",
+    bib-tex()[
         @article{tsukahara2023,
             author  = {塚原, 隆裕},
             yomi    = {Tsukahara, Takahiro},
@@ -197,15 +196,15 @@ Typstでは，`bibliography`関数を使うのが一般的ですが，日本語�
             year    = {2023},
             url     = {https://www.nagare.or.jp/publication/nagare/archive/2023/3.html}
     ]
-]
+)
 ```
 
 `bib-tex`関数を利用して，この中にBibTeX形式で文献を記述します．
 或いは，BibTeXに準拠せず，直接記述することも可能です．
 
 ```typst
-#bibliography-list(lang: "jp")[
-    #bib-item(author: "塚原", year: "2023", label: <tsukahara2023_2>, yomi: "Tsukahara, Takahiro", yearnum: (110, 114))[塚原隆裕, 私の「ながれを学ぶ」使命感, ながれ：日本流体力学会誌, Vol. 42, No. 3, (2023), p. 222.]
+#bibliography-list(lang: "ja")[
+    bib-item(author: "塚原", year: "2023", label: <tsukahara2023_2>, yomi: "Tsukahara, Takahiro", ([塚原隆裕, 私の「ながれを学ぶ」使命感, ながれ：日本流体力学会誌 (2023],[), Vol. 42, No. 3, p. 222.]))
 ]
 ```
 

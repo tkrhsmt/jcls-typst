@@ -189,3 +189,17 @@ Typstでは，`bibliography`関数を使うのが一般的ですが，日本語�
   title: none,
     ..bib-file(read("refs.bib"))
 )
+
+#show: jcls_appendix
+
+#pagebreak()
+#chapter(numbering: none)[付録]
+
+= 付録の書き方
+
+付録を書くには，`jcls_appendix`関数を利用します．
+この関数を利用することで，付録の章番号が`A.1`のようになります．
+また，数式や図表の番号も`A.1.1`のようになります．
+$ H(X) = sum_(x in X) - p(x) log p(x) $<eq:appendix-example>
+
+これも@eq:appendix-example のように参照することができます．

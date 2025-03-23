@@ -205,6 +205,22 @@
 
 // --------------------------------------------------
 
+#let jcls_appendix(body) = {
+  counter(heading).update(0)
+  counter("chapter").update(0)
+  set heading(numbering: "A.1", outlined: false)
+  show heading.where(level: 1): set heading(outlined: true)
+  set math.equation(numbering: num =>
+    "(" + (str(numbering("A", counter(heading).get().at(0))) + "." + str(num)) + ")"
+  )
+  set figure(numbering: num =>
+    str(numbering("A", counter(heading).get().at(0))) + "." + str(num)
+  )
+  body
+}
+
+// --------------------------------------------------
+
 #let author-print(authors) = {
 
   let output-arguments = ()

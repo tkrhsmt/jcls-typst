@@ -1,19 +1,17 @@
 
 #import "style/jcls.typ": *
-#import "bib_style/bib_style.typ": *
-#show: bib_init
 #show: jcls_init
 
 #show: maketitle.with(
   title: [jclsテンプレート],
   authors: (
     (
-      name: "橋本 丈瑠",
+      name: [橋本~丈瑠],
       email: "tkrhsmt@gmail.com",
-      affiliation: "東京理科大学 機械航空宇宙工学科 塚原研究室",
+      affiliation: [東京理科大学~機械航空宇宙工学科~塚原研究室],
     ),
   ),
-  abstract: "",
+  abstract: [],
   tableofcontents: true
 )
 
@@ -43,12 +41,14 @@
   - ゴシック体　：　Harano Aji Gothic
   - 英字　　　　：　CMU Serif
   - 数式　　　　：　Latin Modern Math
+  - 空白操作　　：　Adobe Blank
 ]
 
 これらのフォントは，全て無料で利用することができます．
 日本語フォントは，#link("https://github.com/trueroad/HaranoAjiFonts")からダウンロード可能です．
 英字フォントは，#link("https://fontlibrary.org/en/font/cmu-serif")などからダウンロード可能です．
 数式フォントは，#link("https://ctan.org/tex-archive/fonts/lm-math")などからダウンロード可能です．
+空白操作フォントは，#link("https://github.com/adobe-fonts/adobe-blank")からダウンロード可能です．
 
 == typstのインストール
 
@@ -176,38 +176,16 @@ $<eq:laglange>
 
 文献を引用するには，`bibliography-list`関数を利用します．
 Typstでは，`bibliography`関数を使うのが一般的ですが，日本語文献には対応していません．
-このため，本テンプレートでは独自に開発した文献管理システムを利用します．
+このため，本テンプレートでは独自に開発した`enja-bib`パッケージを利用します．
 これによって，日本語文献と英語文献を混在したBibTeX形式を利用することができます．
 本テンプレートの文献形式は，日本機械学会のフォーマットに準拠しています．
 
-文献の書き方は，例えば以下のようになります．
-
-```typst
-#bibliography-list(lang: "ja",
-    bib-tex()[
-        @article{tsukahara2023,
-            author  = {塚原, 隆裕},
-            yomi    = {Tsukahara, Takahiro},
-            title   = {私の「ながれを学ぶ」使命感},
-            journal = {ながれ：日本流体力学会誌},
-            volume  = {42},
-            number  = {3},
-            pages   = {222},
-            year    = {2023},
-            url     = {https://www.nagare.or.jp/publication/nagare/archive/2023/3.html}
-    ]
-)
-```
-
-`bib-tex`関数を利用して，この中にBibTeX形式で文献を記述します．
-或いは，BibTeXに準拠せず，直接記述することも可能です．
-
-```typst
-#bibliography-list(lang: "ja")[
-    bib-item(author: "塚原", year: "2023", label: <tsukahara2023_2>, yomi: "Tsukahara, Takahiro", ([塚原隆裕, 私の「ながれを学ぶ」使命感, ながれ：日本流体力学会誌 (2023],[), Vol. 42, No. 3, p. 222.]))
-]
-```
-
 文献の引用は簡単です．`@tsukahara2023`のように記述すれば，@tsukahara2023 のように文献を引用することができます．
 
-#include "refs.typ"
+#v(2em)
+#chapter(numbering: none)[参考文献]
+
+#bibliography-list(
+  title: none,
+    ..bib-file(read("refs.bib"))
+)

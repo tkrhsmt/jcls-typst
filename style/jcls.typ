@@ -5,6 +5,8 @@
 
 // import equate package
 #import "@preview/equate:0.2.1": equate
+#import "@preview/enja-bib:0.1.0": *
+#import bib-setting-jsme: *
 
 // setting font
 #let gothic = ("Harano Aji Gothic")
@@ -22,7 +24,7 @@
 }
 
 // japanese code setting
-#let cjkre = regex("[ ]*([\p{Han}\p{Hiragana}\p{Katakana}]+(?:[,\(\)][ ]*[\p{Han}\p{Hiragana}\p{Katakana}]+)*)[ ]*")
+#let cjkre = regex("([\u3000-\u303F\u3040-\u30FF\u31F0-\u31FF\u3200-\u9FFF\uFF00-\uFFEF][　！”＃＄％＆’（）*+，−．／：；＜＝＞？＠［＼］＾＿｀｛｜｝〜、。￥・]*)[ ]+([\u3000-\u303F\u3040-\u30FF\u31F0-\u31FF\u3200-\u9FFF\uFF00-\uFFEF])[ ]*")
 
 // ================================================== //
 //          Japanese class initial setting            //
@@ -89,38 +91,44 @@
   show figure.where(kind: "chapter"): it => {
     set par(first-line-indent: 0pt)
     set text(1.5em, font: gothic, weight: "regular")
+
     align(left)[
       //#counter(heading).update(0)
-      第
       #if it.numbering != none {
+        [第]
         context it.counter.display(it.numbering)
+        [部]
+        v(0.25em)
       }
-      部
-      #v(0.25em)
       #text(1.25em, font: gothic, weight: "regular", it.body)
     ]
 
   }
   // no access to element in outline(indent: it => ...), so we must do indentation in here instead of outline
   show outline.entry: it => {
+    set par(first-line-indent: 0em)
     if it.element.func() == figure {
       // we're configuring chapter printing here, effectively recreating the default show impl with slight tweaks
       let res = link(it.element.location(),
         // we must recreate part of the show rule from above once again
         if it.element.numbering != none {
+          linebreak()
           text(font: gothic, size: 1em, weight: "regular", "第")
           text(font: gothic, size: 1em, weight: "regular", numbering(it.element.numbering, ..it.element.counter.at(it.element.location())))
           text(font: gothic, size: 1em, weight: "regular", "部")
-        } + h(1em) + text(font: gothic, size: 1em, weight: "regular", it.element.body)
+          h(1em)
+        } + text(font: gothic, size: 1em, weight: "regular", it.element.body)
       )
 
       res += h(1fr)
 
-      res += link(it.element.location(), it.page)
+      res += link(it.element.location(), it.page())
       text(font: gothic, size: 1.2em, weight: "regular", res)
+      v(0.5em)
     } else {
       // we're doing indenting here
-      h(1em * it.level) + it
+      it
+      v(0.5em)
     }
   }
   // an example of a "show rule" for a chapter
@@ -168,8 +176,10 @@
     )
   }
   // Disable code breaks between Japanese characters
-  show cjkre: it => it.text.match(cjkre).captures.at(0)
+  show cjkre: it => it.text.match(cjkre).captures.sum()
 
+  // setting bib
+  show: bib-init
 
   body
 }
@@ -195,8 +205,57 @@
 
 // --------------------------------------------------
 
+#let author-print(authors) = {
+
+  let output-arguments = ()
+
+  let tmp_list = ()
+  for author in authors{
+    let tmp = text(1.2em,[#author.name])
+
+    let tmp2 = []
+    if author.at("affiliation", default: []) != []{
+      if author.at("email", default: "") != ""{
+        tmp2 = [#author.affiliation (#author.email)]
+      }else{
+        tmp2 = [#author.affiliation]
+      }
+    }else{
+      if author.at("email", default: "") != ""{
+        tmp2 = [#author.email]
+      }
+    }
+
+    if tmp2 != []{// if author has affiliation or email
+      if tmp_list.contains(tmp2){// if the affiliation or email is already in the list
+        let num = 0
+        for val in tmp_list{// check the number of the same affiliation or email
+          if val != tmp2{
+            num += 1
+          }
+          else{
+            break
+          }
+        }
+        // add the number to the affiliation or email
+        tmp +=super(str(num + 1))
+      }
+      else{
+        // add the affiliation or email to the list
+        tmp += footnote(tmp2)
+        tmp_list.push(tmp2)
+      }
+    }
+
+    output-arguments.push(tmp)
+  }
+
+  return output-arguments
+
+}
+
 #let maketitle(
-  title: "",
+  title: [],
   abstract: [],
   keywords: (),
   authors: (),
@@ -204,7 +263,7 @@
   tableofcontents: false,
   body,
 ) = {
-  set document(author: authors.map(a => a.name), title: title)
+  //set document(author: authors.map(a => a.name), title: title)
   // set title
   pad(
     bottom: 4pt,
@@ -221,23 +280,10 @@
     x: 2em,
     bottom: 1.5em,
     grid(
+      align: center,
       columns: (1fr,) * calc.min(3, authors.len()),
       gutter: 1em,
-      ..authors.map(author => align(center)[
-        #text(1.2em,[#author.name])
-        #if str(author.affiliation) != "" {
-          if str(author.email) != ""{
-            footnote[#author.affiliation (#author.email)]
-
-          }else{
-            footnote[#author.affiliation]
-          }
-        }else{
-          if str(author.email) != ""{
-          footnote[#author.email]
-          }
-        }
-      ]),
+      ..author-print(authors),
     ),
   )
   // set date
@@ -246,18 +292,19 @@
     align(center)[#text(1.2em,[#nowdate])]
   }
   // set abstract
-  if abstract != "" {
+  if abstract != [] {
 
     pad(
       top: 1em,
       x: 3em,
       bottom: 0.4em,
-      align(center)[
+      [
+        #align(center)[
           #text(1.0em, emph(smallcaps[Abstract]), font: english)
-          #set par(justify: true)
-          #set text(hyphenate: false)
-
-          #abstract
+        ]
+        #set par(justify: true)
+        #set text(hyphenate: false)
+        #abstract
       ],
     )
   }else{
@@ -267,13 +314,11 @@
   if tableofcontents {
     v(0.5cm)
     line(length: 100%, stroke: 0.5pt)
-    par(leading: 15pt,
-      outline(
-        indent: auto,
-        fill: box(width: 1fr, repeat(h(2pt) + "." + h(2pt))) + h(8pt),
-        target: chapters-and-headings,
-        title: [#h(-0.7em) 目次]
-        )
+    outline(
+      indent: auto,
+      //fill: box(width: 1fr, repeat(h(2pt) + "." + h(2pt))) + h(8pt),
+      target: chapters-and-headings,
+      title: [#h(-0.7em) 目次],
       )
     pagebreak()
   }
